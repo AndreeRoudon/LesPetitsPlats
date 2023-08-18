@@ -1,0 +1,72 @@
+.header{
+    background: url("../../assets/images/background_LesPetitsPlats.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 667px;
+    &__nav-links{
+        margin-left: 5vw;
+        padding-top: 5vh;
+        margin-bottom: 150px;
+    }
+    &__logo{
+        position: relative;
+        font-family: 'Anton', sans-serif;
+        color: #FFF;
+        text-transform: uppercase;
+        font-size: 32px;
+        display: flex;
+        align-items: center;
+        &:after{
+            content:'';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: #FFF;
+            border-radius: 50%;
+            border: 6px double #000;
+            left: 210px;
+        }
+    }
+    &__content{
+        &--title{
+            max-width: 700px;
+            margin: auto;
+            text-align: center;
+            font-family: 'Anton', sans-serif;
+            color: #FFD15B;
+            font-size: 44px;
+            font-weight: 400;
+            line-height: 66.24px;
+        }
+    }
+    &__research{
+        position: relative;
+        display: flex;
+        align-items: center;
+        max-width: 954px;
+        margin: 2rem auto 0;
+        &--bar{
+            width: 100%;
+            padding: 25px 30px;
+            border-radius: 11px;
+            font-size: 16px;
+            border: none;
+            outline: none;
+        }
+        &--btn{
+            position: absolute;
+            right: 20px;
+            height: 52px;
+            width: 51px;
+            border-radius: 10px;
+            background: #1B1B1B;
+            font-size: 25px;
+            color: #FFF;
+            border: none;
+            cursor: pointer;
+            &:hover{
+                background: #FFD15B;
+            }
+        }
+    }
+}

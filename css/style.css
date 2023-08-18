@@ -1,0 +1,197 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: "Manrope", sans-serif;
+}
+
+.body-page {
+  background-color: #E5E5E5;
+  padding-bottom: 5rem;
+}
+.body-page__section {
+  width: 1236px;
+  margin: auto;
+}
+
+.heading-recipes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 20px;
+  margin-bottom: 3rem;
+}
+.heading-recipes__search {
+  display: flex;
+  list-style: none;
+  gap: 66px;
+}
+.heading-recipes__search--bar {
+  display: flex;
+  align-items: center;
+  gap: 63px;
+  background: #FFF;
+  padding: 17px 16px;
+  border-radius: 11px;
+}
+.heading-recipes__search--arrow {
+  width: 10px;
+  height: 10px;
+  border-bottom: 1px solid #000;
+  border-left: 1px solid #000;
+  transform: rotate(-45deg);
+}
+.heading-recipes__title {
+  font-family: "Anton", sans-serif;
+  font-size: 21px;
+  font-weight: 400;
+}
+
+.gallery-recipes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px;
+}
+.gallery-recipes .recipe-card {
+  width: 380px;
+  height: 730px;
+  background: #FFF;
+  border-radius: 21px;
+  position: relative;
+}
+.gallery-recipes .recipe-card img {
+  width: 100%;
+  object-fit: cover;
+  height: 253px;
+  border-top-left-radius: 21px;
+  border-top-right-radius: 21px;
+}
+.gallery-recipes .recipe-card .time {
+  position: absolute;
+  top: 21px;
+  right: 22px;
+  background-color: #FFD15B;
+  padding: 5px 15px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 400;
+}
+.gallery-recipes .description {
+  padding: 32px 25px 0;
+}
+.gallery-recipes .description h2 {
+  font-family: "Anton", sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  margin-bottom: 30px;
+}
+.gallery-recipes .description h3 {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 9%;
+  text-transform: uppercase;
+  color: #7A7A7A;
+  margin-bottom: 15px;
+}
+.gallery-recipes .description p {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 19px;
+  height: 76px;
+  overflow: hidden;
+  text-align: justify;
+  margin-bottom: 30px;
+}
+.gallery-recipes .description p:hover {
+  overflow-y: scroll;
+}
+.gallery-recipes .description .ingredients {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
+.gallery-recipes .description .ingredients aside {
+  height: 40px;
+}
+.gallery-recipes .description .ingredients aside h4 {
+  font-size: 14px;
+  font-weight: 500;
+}
+.gallery-recipes .description .ingredients aside span {
+  font-size: 14px;
+  font-weight: 400;
+  color: #7A7A7A;
+}
+
+.header {
+  background: url("../../assets/images/background_LesPetitsPlats.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 667px;
+}
+.header__nav-links {
+  margin-left: 5vw;
+  padding-top: 5vh;
+  margin-bottom: 150px;
+}
+.header__logo {
+  position: relative;
+  font-family: "Anton", sans-serif;
+  color: #FFF;
+  text-transform: uppercase;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+}
+.header__logo:after {
+  content: "";
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background-color: #FFF;
+  border-radius: 50%;
+  border: 6px double #000;
+  left: 210px;
+}
+.header__content--title {
+  max-width: 700px;
+  margin: auto;
+  text-align: center;
+  font-family: "Anton", sans-serif;
+  color: #FFD15B;
+  font-size: 44px;
+  font-weight: 400;
+  line-height: 66.24px;
+}
+.header__research {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 954px;
+  margin: 2rem auto 0;
+}
+.header__research--bar {
+  width: 100%;
+  padding: 25px 30px;
+  border-radius: 11px;
+  font-size: 16px;
+  border: none;
+  outline: none;
+}
+.header__research--btn {
+  position: absolute;
+  right: 20px;
+  height: 52px;
+  width: 51px;
+  border-radius: 10px;
+  background: #1B1B1B;
+  font-size: 25px;
+  color: #FFF;
+  border: none;
+  cursor: pointer;
+}
+.header__research--btn:hover {
+  background: #FFD15B;
+}
+
+/*# sourceMappingURL=style.css.map */
