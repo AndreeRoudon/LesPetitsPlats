@@ -4,20 +4,32 @@ async function getRecipes() {
     let recettes = data.recipes;
 
     displayRecipes(recettes);
-    searchBarPrincipal(recettes);
-
-    const ingredientsList = document.querySelector('.list-ingredients');
-    const applianceList = document.querySelector('.list-appliance');
-    const ustensilsList = document.querySelector('.list-ustensils');
-
-    const allIngredients = data.recipes.flatMap(recipe => recipe.ingredients.map(ingredient => ingredient.ingredient));
-    const allAppliances = data.recipes.map(recipe => recipe.appliance);
-    const allUstensils = data.recipes.flatMap(recipe => recipe.ustensils);
-
-    createListItems(allIngredients, ingredientsList);
-    createListItems(allAppliances, applianceList);
-    createListItems(allUstensils, ustensilsList);
+    searchBarPrincipal();
 }
+
+function searchBarPrincipal() {
+    // Sélectionnez l'élément HTML nécessaire pour la recherche
+    const searchBar = document.querySelector('.header__research--bar');
+
+    // Fonction pour effectuer la recherche
+    function performSearch() {
+        const searchTerm = searchBar.value.trim().toLowerCase();
+        if (searchTerm.length >= 3) {
+            const filteredRecipes = recettes.filter(recipe => {
+                const recipeName = recipe.name.toLowerCase();
+                return recipeName.includes(searchTerm);
+            });
+            displayRecipes(filteredRecipes);
+        } else {
+            // Effacez le contenu si la longueur du terme de recherche est inférieure à 3 caractères
+            displayRecipes(recettes);
+        }
+    }
+
+    // Ajoutez un écouteur d'événement à la barre de recherche pour déclencher la recherche
+    searchBar.addEventListener('input', performSearch);
+}
+
 
 function displayRecipes(recipes) {
     const galleryContainer = document.querySelector('.gallery-recipes');
