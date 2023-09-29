@@ -3,9 +3,11 @@ function searchBarPrincipal(recettes) {
     // Sélectionnez l'élément HTML nécessaire pour la recherche
     const searchBar = document.querySelector('.header__research--bar');
     const galleryContainer = document.querySelector('.gallery-recipes');
+    const searchNoResults = document.querySelector('.search-no-results');
+    const searchElement = document.querySelector('.search-element');
 
     // Fonction pour effectuer la recherche
-    function performSearch() {
+    function performSearch(){
         const searchTerm = searchBar.value.trim().toLowerCase();
 
         if (searchTerm.length >= 3) {
@@ -14,19 +16,28 @@ function searchBarPrincipal(recettes) {
                 return (
                     recipe.name.toLowerCase().includes(searchTerm) ||
                     recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchTerm)) ||
-                    recipe.description.toLowerCase().includes(searchTerm)
-                    // Vous pouvez ajouter plus de conditions de recherche ici si nécessaire
+                    recipe.description.toLowerCase().includes(searchTerm) ||
+                    recipe.appliance.toLowerCase().includes(searchTerm) ||
+                    recipe.ustensils.some(ustensils => ustensils.toLowerCase().includes(searchTerm))
                 );
             });
-
             // Effacer les recettes actuellement affichées
             galleryContainer.innerHTML = '';
 
-            // Afficher les recettes filtrées
-            displayRecipes(filteredRecipes);
+            if (filteredRecipes.length === 0) {
+                // Aucun résultat trouvé, afficher le message avec le terme de recherche
+                searchElement.textContent = searchBar.value;
+                searchNoResults.style.display = 'block';
+            } else {
+                // Masquer le message s'il y a des résultats et Afficher les recettes filtrées
+                searchNoResults.style.display = 'none';
+                displayRecipes(filteredRecipes);
+            }
+
         } else {
             // Effacer les recettes actuellement affichées
             galleryContainer.innerHTML = '';
+            searchNoResults.style.display = 'none';
             displayRecipes(recettes);
         }
     }
@@ -34,5 +45,3 @@ function searchBarPrincipal(recettes) {
     // Ajoutez un écouteur d'événement à la barre de recherche pour déclencher la recherche
     searchBar.addEventListener('input', performSearch);
 }
-
-

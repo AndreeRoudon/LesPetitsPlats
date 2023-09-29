@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 
 <head>
     <meta charset="UTF-8">
@@ -31,7 +31,9 @@
         </div>
     </header>
     <main class="body-page">
+
         <section class="body-page__section">
+
             <div class="heading-recipes">
                 <ul class="heading-recipes__search">
                     <li class="heading-recipes__search--bar">
@@ -88,16 +90,25 @@
                 </ul>
                 <h2 class="heading-recipes__title">1500 recettes</h2>
             </div>
+            
             <div class="label-search">
                 <!-- Elements ajouter (ingredients, Appareils, Ustensils) pour la recherche d'une recette -->
             </div>
-            <div class="gallery-recipes">
-                <!-- Recette JS -->
+
+            <div class="recipes">
+                <div class="gallery-recipes">
+                    <!-- Recette JS -->
+                </div>
+                <div class="search-no-results">
+                    <p>Aucune recette ne contient "<span class="search-element"> </span>" vous pouvez chercher «
+                        tarte aux pommes », « poisson », etc.</p>
+                </div>
             </div>
         </section>
 
     </main>
     <script src="scripts/recipes.js"></script>
+    <script src="scripts/utils/displayRecipes.js"></script>
     <script src="scripts/templates/displayList.js"></script>
     <script src="scripts/templates/algo-search.js"></script>
 </body>

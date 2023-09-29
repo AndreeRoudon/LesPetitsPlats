@@ -1,13 +1,3 @@
-.body-page {
-    background-color: #E5E5E5;
-    padding-bottom: 5rem;
-
-    &__section {
-        width: 1236px;
-        margin: auto;
-    }
-}
-
 .heading-recipes {
     display: flex;
     align-items: center;
@@ -203,4 +193,47 @@
             }
         }
     }
+}
+
+.label-search{
+    display: flex;
+    gap: 30px;
+    .ingredient-label{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 200px;
+        padding: 17px 18px;
+        background: #FFD15B;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        .close-label{
+            padding: 10px;
+            cursor: pointer;
+            position: relative;
+            &:after {
+                content: '';
+                position: absolute;
+                background-color: black;
+                width: 15px;
+                height: 1px;
+                transform: rotate(45deg);
+                left: 3px;
+            }
+
+            &:before{
+                content: '';
+                position: absolute;
+                background-color: black;
+                width: 15px;
+                height: 1px;
+                transform: rotate(-45deg);
+                left: 3px;
+            }
+        }
+    }
+}
+
+.search-no-results{
+    display: none;
 }

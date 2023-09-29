@@ -186,9 +186,50 @@
   color: #7A7A7A;
 }
 
+.label-search {
+  display: flex;
+  gap: 30px;
+}
+.label-search .ingredient-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 200px;
+  padding: 17px 18px;
+  background: #FFD15B;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+}
+.label-search .ingredient-label .close-label {
+  padding: 10px;
+  cursor: pointer;
+  position: relative;
+}
+.label-search .ingredient-label .close-label:after {
+  content: "";
+  position: absolute;
+  background-color: black;
+  width: 15px;
+  height: 1px;
+  transform: rotate(45deg);
+  left: 3px;
+}
+.label-search .ingredient-label .close-label:before {
+  content: "";
+  position: absolute;
+  background-color: black;
+  width: 15px;
+  height: 1px;
+  transform: rotate(-45deg);
+  left: 3px;
+}
+
+.search-no-results {
+  display: none;
+}
+
 .header {
   background: url("../../assets/images/background_LesPetitsPlats.jpg");
-  background-repeat: no-repeat;
   background-size: cover;
   height: 667px;
 }
