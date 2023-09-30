@@ -38,24 +38,26 @@ function searchBarSecond(recipes) {
         function filterRecipesByIngredient() {
             const searchNoResults = document.querySelector('.search-no-results');
             const searchElement = document.querySelector('.search-element');
-
+            console.log(Array.from(selectedIngredients).join(' '));
             // Filtrer les recettes qui contiennent l'ingrédient sélectionné
             const filteredRecipes = recipes.filter(recipe => {
+                const recipeIngredients = recipe.ingredients.map(ingredient => ingredient.ingredient.toLowerCase());
                 return (
-                    recipe.name.toLowerCase().includes(searchTerm) ||
-                    recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchTerm)) ||
-                    recipe.description.toLowerCase().includes(searchTerm) ||
-                    recipe.appliance.toLowerCase().includes(searchTerm) ||
-                    recipe.ustensils.some(ustensils => ustensils.toLowerCase().includes(searchTerm))
+                    recipeIngredients.some(ingredient => selectedIngredients.has(ingredient))
+                    /*
+                    recipe.name.toLowerCase().includes(Array.from(selectedIngredients).join(' '))
+                    recipe.description.toLowerCase().includes(Array.from(selectedIngredients).join(' ')) ||
+                    recipe.appliance.toLowerCase().includes(Array.from(selectedIngredients).join(' ')) ||
+                    recipe.ustensils.some(ustensils => selectedIngredients.has(ustensils.toLowerCase()))
+                    */
                 );
             });
             galleryContainer.innerHTML = '';
 
             if (filteredRecipes.length === 0) {
                 // Aucun résultat trouvé, afficher le message avec le terme de recherche
-                searchElement.textContent = searchTerm;
+                searchElement.textContent = "ces élements de recherche";
                 searchNoResults.style.display = 'block';
-                //searchElement.textContent = Array.from(selectedIngredients).join(', ');
             } else {
                 // Masquer le message s'il y a des résultats et Afficher les recettes filtrées
                 searchNoResults.style.display = 'none';
@@ -91,6 +93,10 @@ function searchBarSecond(recipes) {
 }
 
 /*************************************************************************************/
+
+// Sélectionnez tous les éléments avec la class "pointer"
+const pointerElements = document.querySelectorAll('.pointer');
+
 // Fonction pour gérer le click sur un élément avec la class "pointer"
 function handlePointerClick(event) {
     const pointer = event.currentTarget;
@@ -107,9 +113,6 @@ function handlePointerClick(event) {
         arrow.style.bottom = "3px";
     }
 }
-
-// Sélectionnez tous les éléments avec la class "pointer"
-const pointerElements = document.querySelectorAll('.pointer');
 
 // Ajoutez un écouteur d'événement de click à chaque élément "pointer"
 pointerElements.forEach(pointer => {
