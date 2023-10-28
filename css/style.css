@@ -109,6 +109,9 @@
   font-size: 21px;
   font-weight: 400;
 }
+.heading-recipes__title span {
+  font-family: "Anton", sans-serif;
+}
 
 .gallery-recipes {
   display: grid;

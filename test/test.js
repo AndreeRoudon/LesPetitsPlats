@@ -1,46 +1,55 @@
-// Fonction pour charger les recettes
-async function getRecipes() {
-    const response = await fetch('./data/recipes.json');
-    const data = await response.json();
-    const recettes = data.recipes;
+function searchBarSecond(recipes) {
+    const ingredientsList = document.querySelector('.list-ingredients');
+    const applianceList = document.querySelector('.list-appliance');
+    const utensilsList = document.querySelector('.list-ustensils');
+    const galleryContainer = document.querySelector('.gallery-recipes');
 
-    // Affichez les recettes dans des cartes
-    displayRecipes(recettes);
+    let filters = {
+        ingredients: new Set(),
+        appliances: new Set(),
+        utensils: new Set()
+    };
 
-    // Sélectionnez l'élément HTML nécessaire pour la recherche
-    const searchBar = document.querySelector('.header__research--bar');
+    displayListItems(recipes);
 
-    // Fonction pour effectuer la recherche
-    function performSearch() {
-        const searchTerm = searchBar.value.trim().toLowerCase();
-        if (searchTerm.length >= 3) {
-            const filteredRecipes = recettes.filter(recipe => {
-                const recipeName = recipe.name.toLowerCase();
-                return recipeName.includes(searchTerm);
+    function displayListItems(recipesToShow) {
+        const allIngredients = [...new Set(recipesToShow.flatMap(recipe => recipe.ingredients.map(ingredient => ingredient.ingredient.toLowerCase())))];
+        const allAppliances = [...new Set(recipesToShow.map(recipe => recipe.appliance.toLowerCase()))];
+        const allUtensils = [...new Set(recipesToShow.flatMap(recipe => recipe.ustensils.map(utensil => utensil.toLowerCase())))];
+
+        // Clear the existing lists
+        ingredientsList.innerHTML = '';
+        applianceList.innerHTML = '';
+        utensilsList.innerHTML = '';
+
+        createListItems(allIngredients, ingredientsList, 'ingredients');
+        createListItems(allAppliances, applianceList, 'appliances');
+        createListItems(allUtensils, utensilsList, 'ustensils');
+    }
+
+    function createListItems(items, listElement, filterType) {
+        items.forEach(item => {
+            const listItem = document.createElement('li');
+            listItem.textContent = item;
+            listElement.appendChild(listItem);
+
+            listItem.addEventListener('click', () => {
+                filters[filterType].add(item);
+                filterAndDisplayRecipes();
             });
-            // Affichez les recettes filtrées dans des cartes
-            displayRecipes(filteredRecipes);
-        } else {
-            // Effacez le contenu si la longueur du terme de recherche est inférieure à 3 caractères
-            displayRecipes(recettes);
-        }
+        });
     }
 
-    // Ajoutez un écouteur d'événement à la barre de recherche pour déclencher la recherche
-    searchBar.addEventListener('input', performSearch);
-}
+    function filterAndDisplayRecipes() {
+        const filteredRecipes = recipes.filter(recipe => {
+            return (
+                [...filters.ingredients].every(ingredient => recipe.ingredients.some(ing => ing.ingredient.toLowerCase() === ingredient)) &&
+                filters.appliances.has(recipe.appliance.toLowerCase()) &&
+                [...filters.ustensils].every(utensil => recipe.ustensils.some(ut => ut.toLowerCase() === utensil))
+            );
+        });
 
-// Fonction de recherche principale
-function searchBarPrincipal() {
-    // Sélectionnez l'élément HTML nécessaire pour la recherche
-    const searchBar = document.querySelector('.header__research--bar');
-
-    // Fonction pour effectuer la recherche
-    function performSearch() {
-        const searchTerm = searchBar.value.trim().toLowerCase();
-        // Mettez ici votre logique de recherche principale
+        galleryContainer.innerHTML = ""; // Clear the existing recipes (You should later add a function to display the actual recipes)
+        displayListItems(filteredRecipes);
     }
-
-    // Ajoutez un écouteur d'événement à la barre de recherche pour déclencher la recherche
-    searchBar.addEventListener('input', performSearch);
 }

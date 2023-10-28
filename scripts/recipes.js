@@ -1,11 +1,19 @@
+let currentRecipes = getRecipes();
+
 async function getRecipes() {
     const response = await fetch('./data/recipes.json');
     const data = await response.json();
-    let recipe = data.recipes;
+    let recipes = data.recipes;
 
-    displayRecipes(recipe);
-    searchBarPrincipal(recipe);
-    searchBarSecond(recipe);
+    return recipes;
 }
 
-getRecipes();
+async function init(){
+    const recipes = await getRecipes();
+
+    displayRecipes(recipes);
+    searchBarPrincipal(recipes);
+    searchBarSecond(recipes);
+}
+
+init();

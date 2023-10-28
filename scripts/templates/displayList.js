@@ -3,7 +3,9 @@ function searchBarSecond(recipes) {
     const applianceList = document.querySelector('.list-appliance');
     const utensilsList = document.querySelector('.list-ustensils');
     const galleryContainer = document.querySelector('.gallery-recipes');
-    const selectedIngredients = new Set();
+
+    const selectedItems = new Set();
+
 
     const allIngredients = recipes.flatMap(recipe => recipe.ingredients.map(ingredient => ingredient.ingredient));
     const allAppliances = recipes.map(recipe => recipe.appliance);
@@ -13,108 +15,174 @@ function searchBarSecond(recipes) {
     createListItems(allAppliances, applianceList);
     createListItems(allUtensils, utensilsList);
 
-    function createListItems(items, listElement) {
-        const seenItems = new Set();
-
-        items.forEach(item => {
-            if (!seenItems.has(item)) {
+    // Fonction qui permet de créer une liste deroulantes pour les ingredients, ustensilles et appareils
+    function createListItems(items, listElement) { // paramètre (objets liste, element Html)
+        listElement.innerHTML = '';
+        const noRepeatItems = new Set(); // stock les élements des recettes pour éviter les repetitions dans la liste
+        items.forEach(elem => {
+            let item = elem.toLowerCase();
+            if (!noRepeatItems.has(item)) {
                 const listItem = document.createElement('li');
                 listItem.textContent = item;
                 listElement.appendChild(listItem);
-                seenItems.add(item);
+                noRepeatItems.add(item);
 
-                // Attachez les gestionnaires d'événements de click à chaque nouvel élément
+                // Lorsque l'utilisateur selectionne un élément de la liste
                 listItem.addEventListener('click', () => {
-                    // Utilisez l'élément actuel comme ingrédient
-                    const ingredient = item.toLowerCase();
-                    createIngredientLabel(ingredient);
-                    selectedIngredients.add(ingredient);
+                    createIngredientLabel(item);
+                    selectedItems.add(item);
                     filterRecipesByIngredient();
                 });
             }
         });
+    }
 
-        // Fonction pour filtrer les recettes par ingrédient, ustensiles ou appareils
-        function filterRecipesByIngredient() {
-            const searchNoResults = document.querySelector('.search-no-results');
-            const searchElement = document.querySelector('.search-element');
-            console.log(Array.from(selectedIngredients).join(' '));
-            // Filtrer les recettes qui contiennent l'ingrédient sélectionné
-            const filteredRecipes = recipes.filter(recipe => {
-                const recipeIngredients = recipe.ingredients.map(ingredient => ingredient.ingredient.toLowerCase());
-                return (
-                    recipeIngredients.some(ingredient => selectedIngredients.has(ingredient))
-                    /*
-                    recipe.name.toLowerCase().includes(Array.from(selectedIngredients).join(' '))
-                    recipe.description.toLowerCase().includes(Array.from(selectedIngredients).join(' ')) ||
-                    recipe.appliance.toLowerCase().includes(Array.from(selectedIngredients).join(' ')) ||
-                    recipe.ustensils.some(ustensils => selectedIngredients.has(ustensils.toLowerCase()))
-                    */
-                );
+    function filterRecipesByIngredient() {
+        const searchNoResults = document.querySelector(".search-no-results");
+        let filteredRecipes = new Set(recipes);
+        selectedItems.forEach((tag) => {
+            foundedRecipes = recipes.filter((recipe) => {
+                if (collectIngredients(recipe).includes(tag) ||
+                    collectUstensiles(recipe).includes(tag) ||
+                    collectAppliance(recipe).includes(tag))
+                    return recipe;
             });
-            galleryContainer.innerHTML = '';
+            filteredRecipes = new Set(
+                [...foundedRecipes].filter((recipe) => filteredRecipes.has(recipe))
+            );
+        });
 
-            if (filteredRecipes.length === 0) {
-                // Aucun résultat trouvé, afficher le message avec le terme de recherche
-                searchElement.textContent = "ces élements de recherche";
-                searchNoResults.style.display = 'block';
-            } else {
-                // Masquer le message s'il y a des résultats et Afficher les recettes filtrées
-                searchNoResults.style.display = 'none';
-                displayRecipes(filteredRecipes);
-            }
+        galleryContainer.innerHTML = "";
+
+        if (filteredRecipes.size > 0) {
+            searchNoResults.style.display = "none";
+            currentRecipes = [...filteredRecipes]; // prend tous les élements du tableau filteredRecipes et les transfert dans currentRecipes
+            updateRecipeCount(currentRecipes.length);
+            updateListsRecipes();
+            displayRecipes(filteredRecipes);
+        } else {
+            console.log("error");
         }
-        // Fonction pour créer un élément d'ingrédient
-        function createIngredientLabel(ingredient) {
-            const labelContainer = document.querySelector('.label-search');
+    }
 
-            const ingredientLabel = document.createElement('div');
-            const ingredientSpan = document.createElement('span');
-            const closeLabel = document.createElement('div');
-
-            ingredientLabel.classList.add('ingredient-label');
-            closeLabel.classList.add('close-label');
-
-            closeLabel.addEventListener('click', () => {
-                selectedIngredients.delete(ingredient);
-                console.log(selectedIngredients);
-                ingredientLabel.remove();
-                filterRecipesByIngredient();
-            });
-
-            ingredientSpan.textContent = ingredient;
-
-            ingredientLabel.appendChild(ingredientSpan);
-            ingredientLabel.appendChild(closeLabel);
-
-            labelContainer.appendChild(ingredientLabel);
+    function updateRecipeCount(count) {
+        const recipeCountElement = document.querySelector('.nb-recipes');
+        if (count < 50) {
+            recipeCountElement.textContent = count;
+        } else {
+            recipeCountElement.textContent = 1500;
         }
+    }
+    //fonction qui permet de mettre à jour la liste
+    function updateListsRecipes() {
+        ingredientsList.innerHTML = '';
+        applianceList.innerHTML = '';
+        utensilsList.innerHTML = '';
+
+        const updatedIngredients = currentRecipes.flatMap(recipe => recipe.ingredients.map(ingredient => ingredient.ingredient));
+        const updatedAppliances = currentRecipes.map(recipe => recipe.appliance);
+        const updatedUtensils = currentRecipes.flatMap(recipe => recipe.ustensils);
+
+        createListItems(updatedIngredients, ingredientsList);
+        createListItems(updatedAppliances, applianceList);
+        createListItems(updatedUtensils, utensilsList);
+    }
+
+    function createIngredientLabel(ingredient) {
+        const labelContainer = document.querySelector('.label-search');
+
+        const ingredientLabel = document.createElement('div');
+        const ingredientSpan = document.createElement('span');
+        const closeLabel = document.createElement('div');
+
+        ingredientLabel.classList.add('ingredient-label');
+        closeLabel.classList.add('close-label');
+
+        closeLabel.addEventListener('click', () => {
+            selectedItems.delete(ingredient);
+            ingredientLabel.remove();
+            filterRecipesByIngredient();
+        });
+
+        ingredientSpan.textContent = ingredient;
+
+        ingredientLabel.appendChild(ingredientSpan);
+        ingredientLabel.appendChild(closeLabel);
+
+        labelContainer.appendChild(ingredientLabel);
     }
 }
 
-/*************************************************************************************/
+
+
+
+function collectIngredients(recipe) {
+    const ingredients = new Set();
+
+    for (let item of recipe.ingredients) {
+        ingredients.add(item.ingredient.toLowerCase());
+    }
+    return [...ingredients];
+}
+
+function collectUstensiles(recipe) {
+    const ustensiles = new Set();
+
+    for (let item of recipe.ustensils) {
+        ustensiles.add(item.toLowerCase());
+    }
+    return [...ustensiles];
+}
+
+function collectAppliance(recipe) {
+    return recipe.appliance.toLowerCase();
+}
 
 // Sélectionnez tous les éléments avec la class "pointer"
 const pointerElements = document.querySelectorAll('.pointer');
 
-// Fonction pour gérer le click sur un élément avec la class "pointer"
 function handlePointerClick(event) {
+    event.stopPropagation();  // arrêt de la propagation de l'événement
+
     const pointer = event.currentTarget;
     const arrow = pointer.querySelector('.arrow');
-    // Sélectionnez l'élément avec la class "arrow" à l'intérieur du pointer
     const displayList = pointer.nextElementSibling;
 
-    displayList.classList.toggle('open');
-    if (displayList.classList.contains("open")) {
-        arrow.style.transform = "rotate(135deg)";
-        arrow.style.bottom = "-3px";
-    } else {
-        arrow.style.transform = "rotate(-45deg)";
-        arrow.style.bottom = "3px";
-    }
+    closeAllLists();  // Ferme toutes les listes avant d'ouvrir celle-ci
+    displayList.classList.add('open');
+    arrow.style.transform = "rotate(135deg)";
+    arrow.style.bottom = "-3px";
 }
 
 // Ajoutez un écouteur d'événement de click à chaque élément "pointer"
 pointerElements.forEach(pointer => {
     pointer.addEventListener('click', handlePointerClick);
 });
+
+function closeAllLists() {
+    pointerElements.forEach(pointer => {
+        const arrow = pointer.querySelector('.arrow');
+        const displayList = pointer.nextElementSibling;
+        if (displayList.classList.contains('open')) {
+            displayList.classList.remove('open');
+            arrow.style.transform = "rotate(-45deg)";
+            arrow.style.bottom = "3px";
+        }
+    });
+}
+
+document.addEventListener('click', function (event) {
+    let clickedInsideList = false;
+    pointerElements.forEach(pointer => {
+        if (pointer.contains(event.target) || pointer.nextElementSibling.contains(event.target)) {
+            clickedInsideList = true;
+        }
+    });
+
+    if (!clickedInsideList) {
+        closeAllLists();
+    }
+});
+
+// rercheche principal filtrer la liste des tags
+// a la supression d'un tag verifier si il ya element dans la barre de recherche, appliquer et filtrer si il y a encore un element dans tab

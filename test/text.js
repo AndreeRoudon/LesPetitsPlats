@@ -1,92 +1,140 @@
-async function getRecipes() {
-    const response = await fetch('./data/recipes.json');
-    const data = await response.json();
-    let recettes = data.recipes;
+function searchBarSecond(recipes) {
+    const ingredientsList = document.querySelector('.list-ingredients');
+    const applianceList = document.querySelector('.list-appliance');
+    const utensilsList = document.querySelector('.list-ustensils');
+    const galleryContainer = document.querySelector('.gallery-recipes');
+    const selectedIngredients = new Set();
 
-    displayRecipes(recettes);
-    searchBarPrincipal();
-}
+    const allIngredients = recipes.flatMap(recipe => recipe.ingredients.map(ingredient => ingredient.ingredient));
+    const allAppliances = recipes.map(recipe => recipe.appliance);
+    const allUtensils = recipes.flatMap(recipe => recipe.ustensils);
 
-function searchBarPrincipal() {
-    // Sélectionnez l'élément HTML nécessaire pour la recherche
-    const searchBar = document.querySelector('.header__research--bar');
+    createListItems(allIngredients, ingredientsList);
+    createListItems(allAppliances, applianceList);
+    createListItems(allUtensils, utensilsList);
 
-    // Fonction pour effectuer la recherche
-    function performSearch() {
-        const searchTerm = searchBar.value.trim().toLowerCase();
-        if (searchTerm.length >= 3) {
-            const filteredRecipes = recettes.filter(recipe => {
-                const recipeName = recipe.name.toLowerCase();
-                return recipeName.includes(searchTerm);
+    let currentRecipes = recipes;
+
+    // Fonction qui permet de créer une liste deroulantes pour les ingredients, ustensilles et appareils
+    function createListItems(items, listElement) {
+        const seenItems = new Set();
+        items.forEach(item => {
+            if (!seenItems.has(item)) {
+                const listItem = document.createElement('li');
+                listItem.textContent = item;
+                listElement.appendChild(listItem);
+                seenItems.add(item);
+
+                // Lorsque l'utilisateur selectionne un élément de la liste
+                listItem.addEventListener('click', () => {
+                    const ingredient = item.toLowerCase();
+                    createIngredientLabel(ingredient);
+                    filterRecipesByIngredient();
+                    filterListRecipes(ingredient);
+                    selectedIngredients.add(ingredient);
+                });
+            }
+        });
+        /*
+        // Cette fonction filtre les recettes par ingrédient et les stocke dans currentRecipes
+        function filterListRecipes(ingredient) {
+            currentRecipes = recipes.filter(recipe =>
+                recipe.ingredients.some(ing => ing.ingredient.toLowerCase() === ingredient)
+            );
+            console.log(currentRecipes);
+        }
+
+        // Cette fonction met à jour la liste des ingrédients en fonction des recettes actuellement stockées dans currentRecipes
+        function updateIngredientListByRecipes(filteredRecipes) { // parametre des recettes filtre
+            console.log(filteredRecipes);
+            const allIngredients = filteredRecipes.map(recipe =>
+                recipe.ingredients.map(ingredient => ingredient.ingredient)
+            );
+
+            // Clear the existing list
+            const ingredientsList = document.querySelector('.list-ingredients');
+            ingredientsList.innerHTML = '';
+
+            // Add the ingredients from the current recipes
+            createListItems(allIngredients, ingredientsList);
+        }
+        */
+
+        function filterRecipesByIngredient() {
+            const searchNoResults = document.querySelector(".search-no-results");
+            const searchElement = document.querySelector(".search-element");
+            let filteredRecipes = new Set(recipes);
+            selectedIngredients.forEach((tag) => {
+                tag = tag.toLowerCase();
+                foundedRecipes = recipes.filter((recipe) => {
+                    if (collectIngredients(recipe).includes(tag) ||
+                        collectUstensiles(recipe).includes(tag) ||
+                        collectAppliance(recipe).includes(tag))
+
+                        return recipe;
+                });
+
+                filteredRecipes = new Set(
+                    [...foundedRecipes].filter((recipe) => filteredRecipes.has(recipe))
+                );
             });
-            displayRecipes(filteredRecipes);
-        } else {
-            // Effacez le contenu si la longueur du terme de recherche est inférieure à 3 caractères
-            displayRecipes(recettes);
+            console.log(filteredRecipes);
+            galleryContainer.innerHTML = "";
+
+            if (filteredRecipes.length === 0) {
+                console.log("rien");
+            } else {
+                searchNoResults.style.display = "none";
+                updateIngredientListByRecipes(filteredRecipes);
+                displayRecipes(filteredRecipes);
+            }
+        }
+        
+        // Fonction pour créer un élément d'ingrédient
+        function createIngredientLabel(ingredient) {
+            const labelContainer = document.querySelector('.label-search');
+
+            const ingredientLabel = document.createElement('div');
+            const ingredientSpan = document.createElement('span');
+            const closeLabel = document.createElement('div');
+
+            ingredientLabel.classList.add('ingredient-label');
+            closeLabel.classList.add('close-label');
+
+            closeLabel.addEventListener('click', () => {
+                selectedIngredients.delete(ingredient);
+                ingredientLabel.remove();
+                filterRecipesByIngredient();
+            });
+
+            ingredientSpan.textContent = ingredient;
+
+            ingredientLabel.appendChild(ingredientSpan);
+            ingredientLabel.appendChild(closeLabel);
+
+            labelContainer.appendChild(ingredientLabel);
         }
     }
-
-    // Ajoutez un écouteur d'événement à la barre de recherche pour déclencher la recherche
-    searchBar.addEventListener('input', performSearch);
 }
 
+function collectIngredients(recipe) {
+    const ingredients = new Set();
 
-function displayRecipes(recipes) {
-    const galleryContainer = document.querySelector('.gallery-recipes');
-
-    recipes.forEach(recipe => {
-        const recipeDiv = document.createElement('article');
-        recipeDiv.classList.add('recipe-card');
-
-        const recipeImage = document.createElement('img');
-        recipeImage.src = `assets/images/recettes/${recipe.image}`;
-        recipeImage.alt = recipe.name;
-
-        const recipeTime = document.createElement('span');
-        recipeTime.classList.add('time');
-        recipeTime.textContent = `${recipe.time}min`;
-
-        const contentText = document.createElement('div');
-        contentText.classList.add('description');
-
-        const recipeTitle = document.createElement('h2');
-        recipeTitle.textContent = recipe.name;
-
-        const descriptionTitle = document.createElement('h3');
-        descriptionTitle.textContent = "recette";
-
-        const descriptionParag = document.createElement('p');
-        descriptionParag.textContent = recipe.description;
-
-        const ingredientTitle = document.createElement('h3');
-        ingredientTitle.textContent = "ingredients";
-
-        const ingredients = document.createElement('div');
-        ingredients.classList.add('ingredients');
-
-        recipe.ingredients.forEach(ingredient => {
-            const ingredientItem = document.createElement('aside')
-            const ingredientH4 = document.createElement('h4');
-            ingredientH4.textContent = `${ingredient.ingredient}`;
-            const ingredientSpan = document.createElement('span');
-            ingredientSpan.textContent = `${ingredient.quantity || '-'} ${ingredient.unit || ''}`;
-            ingredients.appendChild(ingredientItem);
-            ingredientItem.appendChild(ingredientH4);
-            ingredientItem.appendChild(ingredientSpan);
-        });
-
-        recipeDiv.appendChild(recipeImage);
-        recipeDiv.appendChild(contentText);
-        recipeDiv.appendChild(recipeTime);
-
-        contentText.appendChild(recipeTitle);
-        contentText.appendChild(descriptionTitle);
-        contentText.appendChild(descriptionParag);
-        contentText.appendChild(ingredientTitle);
-        contentText.appendChild(ingredients);
-
-        galleryContainer.appendChild(recipeDiv);
-    });
+    for (let item of recipe.ingredients) {
+        ingredients.add(item.ingredient.toLowerCase());
+    }
+    return [...ingredients];
 }
 
-getRecipes();
+function collectUstensiles(recipe) {
+    const ustensiles = new Set();
+
+    for (let item of recipe.ustensils) {
+        ustensiles.add(item.toLowerCase());
+    }
+    return [...ustensiles];
+}
+
+function collectAppliance(recipe) {
+    return recipe.appliance.toLowerCase();
+}
