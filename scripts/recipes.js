@@ -1,5 +1,6 @@
 let currentRecipes = getRecipes();
 
+
 async function getRecipes() {
     const response = await fetch('./data/recipes.json');
     const data = await response.json();
@@ -13,7 +14,7 @@ async function init(){
 
     displayRecipes(recipes);
     searchBarPrincipal(recipes);
-    searchBarSecond(recipes);
+    // searchBarSecond(recipes);
 }
 
 init();
