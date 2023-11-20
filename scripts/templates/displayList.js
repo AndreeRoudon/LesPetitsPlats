@@ -1,126 +1,3 @@
-const ingredientsList = document.querySelector('.list-ingredients');
-const applianceList = document.querySelector('.list-appliance');
-const utensilsList = document.querySelector('.list-ustensils');
-const galleryContainer = document.querySelector('.gallery-recipes');
-const selectedItems = new Set();
-let recipesGlobal = getRecipes();
-
-//let filteredRecipes;
-
-getRecipes().then(recipes => {
-    recipesGlobal = recipes;
-    const allIngredients = recipesGlobal.flatMap(recipe => recipe.ingredients.map(ingredient => ingredient.ingredient));
-    const allAppliances = recipesGlobal.map(recipe => recipe.appliance);
-    const allUtensils = recipesGlobal.flatMap(recipe => recipe.ustensils);
-    filteredRecipes = new Set (recipesGlobal);
-    
-    createListItems(allIngredients, ingredientsList);
-    createListItems(allAppliances, applianceList);
-    createListItems(allUtensils, utensilsList);
-});
-
-
-// Fonction qui permet de créer une liste deroulantes pour les ingredients, ustensilles et appareils
-function createListItems(items, listElement) { // paramètre (objets liste, element Html)
-    listElement.innerHTML = '';
-    const noRepeatItems = new Set(); // stock les élements des recettes pour éviter les repetitions dans la liste
-    items.forEach(elem => {
-        let item = elem.toLowerCase();
-        if (!noRepeatItems.has(item)) {
-            const listItem = document.createElement('li');
-            listItem.textContent = item;
-            listElement.appendChild(listItem);
-            noRepeatItems.add(item);
-
-            // Lorsque l'utilisateur selectionne un élément de la liste
-            listItem.addEventListener('click', () => {
-                createIngredientLabel(item);
-                selectedItems.add(item);
-                filterRecipesByIngredient();
-            });
-        }
-    });
-}
-
-function filterRecipesByIngredient() {
-    const searchNoResults = document.querySelector(".search-no-results");
-    recipesGlobal = filteredRecipes;
-    filteredRecipes = new Set (recipesGlobal);
-    selectedItems.forEach((tag) => {
-        foundedRecipes = recipesGlobal.filter((recipe) => {
-            if (collectIngredients(recipe).includes(tag) ||
-                collectUstensiles(recipe).includes(tag) ||
-                collectAppliance(recipe).includes(tag))
-                return recipe;
-        });
-
-        filteredRecipes = new Set(
-            [...foundedRecipes].filter((recipe) => filteredRecipes.has(recipe))
-        );
-    });
-
-    galleryContainer.innerHTML = "";
-
-    if (filteredRecipes.size > 0) {
-        searchNoResults.style.display = "none";
-        currentRecipes = [...filteredRecipes]; // prend tous les élements du tableau filteredRecipes et les transfert dans currentRecipes
-        updateRecipeCount(currentRecipes.length);
-        updateListsRecipes();
-        displayRecipes(filteredRecipes);
-    } else {
-        console.log("error");
-    }
-}
-
-// Fonction qui permet de mettre à jour la compteur de recettes afficher
-function updateRecipeCount(count) {
-    const recipeCountElement = document.querySelector('.nb-recipes');
-    if (count < 50) {
-        recipeCountElement.textContent = count;
-    } else {
-        recipeCountElement.textContent = 1500;
-    }
-}
-
-//fonction qui permet de mettre à jour la liste
-function updateListsRecipes() {
-    ingredientsList.innerHTML = '';
-    applianceList.innerHTML = '';
-    utensilsList.innerHTML = '';
-
-    const updatedIngredients = currentRecipes.flatMap(recipe => recipe.ingredients.map(ingredient => ingredient.ingredient));
-    const updatedAppliances = currentRecipes.map(recipe => recipe.appliance);
-    const updatedUtensils = currentRecipes.flatMap(recipe => recipe.ustensils);
-
-    createListItems(updatedIngredients, ingredientsList);
-    createListItems(updatedAppliances, applianceList);
-    createListItems(updatedUtensils, utensilsList);
-}
-
-function createIngredientLabel(ingredient) {
-    const labelContainer = document.querySelector('.label-search');
-
-    const ingredientLabel = document.createElement('div');
-    const ingredientSpan = document.createElement('span');
-    const closeLabel = document.createElement('div');
-
-    ingredientLabel.classList.add('ingredient-label');
-    closeLabel.classList.add('close-label');
-
-    closeLabel.addEventListener('click', () => {
-        selectedItems.delete(ingredient);
-        ingredientLabel.remove();
-        filterRecipesByIngredient();
-    });
-
-    ingredientSpan.textContent = ingredient;
-
-    ingredientLabel.appendChild(ingredientSpan);
-    ingredientLabel.appendChild(closeLabel);
-
-    labelContainer.appendChild(ingredientLabel);
-}
-
 function collectIngredients(recipe) {
     const ingredients = new Set();
 
@@ -142,11 +19,6 @@ function collectUstensiles(recipe) {
 function collectAppliance(recipe) {
     return recipe.appliance.toLowerCase();
 }
-
-/*
-    function searchBarSecond(recipes) {
-    }
-*/
 
 // Sélectionnez tous les éléments avec la class "pointer"
 const pointerElements = document.querySelectorAll('.pointer');
@@ -193,6 +65,3 @@ document.addEventListener('click', function (event) {
         closeAllLists();
     }
 });
-
-// rercheche principal filtrer la liste des tags
-// a la supression d'un tag verifier si il ya element dans la barre de recherche, appliquer et filtrer si il y a encore un element dans tab
