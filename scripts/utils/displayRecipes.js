@@ -1,40 +1,8 @@
-async function getRecipes() {
-    const response = await fetch('./data/recipes.json');
-    const data = await response.json();
-    let recettes = data.recipes;
-
-    displayRecipes(recettes);
-    searchBarPrincipal();
-}
-
-function searchBarPrincipal() {
-    // Sélectionnez l'élément HTML nécessaire pour la recherche
-    const searchBar = document.querySelector('.header__research--bar');
-
-    // Fonction pour effectuer la recherche
-    function performSearch() {
-        const searchTerm = searchBar.value.trim().toLowerCase();
-        if (searchTerm.length >= 3) {
-            const filteredRecipes = recettes.filter(recipe => {
-                const recipeName = recipe.name.toLowerCase();
-                return recipeName.includes(searchTerm);
-            });
-            displayRecipes(filteredRecipes);
-        } else {
-            // Effacez le contenu si la longueur du terme de recherche est inférieure à 3 caractères
-            displayRecipes(recettes);
-        }
-    }
-
-    // Ajoutez un écouteur d'événement à la barre de recherche pour déclencher la recherche
-    searchBar.addEventListener('input', performSearch);
-}
-
-
 function displayRecipes(recipes) {
     const galleryContainer = document.querySelector('.gallery-recipes');
 
-    recipes.forEach(recipe => {
+    for (let j = 0; j < recipes.length; j++) {
+        const recipe = recipes[j];
         const recipeDiv = document.createElement('article');
         recipeDiv.classList.add('recipe-card');
 
@@ -64,16 +32,17 @@ function displayRecipes(recipes) {
         const ingredients = document.createElement('div');
         ingredients.classList.add('ingredients');
 
-        recipe.ingredients.forEach(ingredient => {
-            const ingredientItem = document.createElement('aside')
+        for (let i = 0; i < recipe.ingredients.length; i++) {
+            const ingredient = recipe.ingredients[i];
+            const ingredientItem = document.createElement('aside');
             const ingredientH4 = document.createElement('h4');
-            ingredientH4.textContent = `${ingredient.ingredient}`;
+            ingredientH4.textContent = ingredient.ingredient;
             const ingredientSpan = document.createElement('span');
             ingredientSpan.textContent = `${ingredient.quantity || '-'} ${ingredient.unit || ''}`;
             ingredients.appendChild(ingredientItem);
             ingredientItem.appendChild(ingredientH4);
             ingredientItem.appendChild(ingredientSpan);
-        });
+        }
 
         recipeDiv.appendChild(recipeImage);
         recipeDiv.appendChild(contentText);
@@ -86,7 +55,5 @@ function displayRecipes(recipes) {
         contentText.appendChild(ingredients);
 
         galleryContainer.appendChild(recipeDiv);
-    });
+    }
 }
-
-getRecipes();

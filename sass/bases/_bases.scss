@@ -4,3 +4,13 @@
     margin: 0;
     font-family: 'Manrope', sans-serif;
 }
+
+.body-page {
+    background-color: #E5E5E5;
+    padding-bottom: 5rem;
+
+    &__section {
+        width: 1236px;
+        margin: auto;
+    }
+}
