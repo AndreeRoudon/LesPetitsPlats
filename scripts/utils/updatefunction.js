@@ -1,11 +1,7 @@
 // Fonction qui permet de mettre à jour la compteur de recettes afficher
 function updateRecipeCount(count) {
     const recipeCountElement = document.querySelector('.nb-recipes');
-    if (count < 50) {
-        recipeCountElement.textContent = count;
-    } else {
-        recipeCountElement.textContent = 1500;
-    }
+    recipeCountElement.textContent = count;
 }
 
 //fonction qui permet de mettre à jour la liste

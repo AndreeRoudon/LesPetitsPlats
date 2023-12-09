@@ -154,7 +154,7 @@
 .gallery-recipes .description h3 {
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 9%;
+  letter-spacing: 0.1vw;
   text-transform: uppercase;
   color: #7A7A7A;
   margin-bottom: 15px;
