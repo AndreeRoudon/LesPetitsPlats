@@ -25,49 +25,53 @@ getRecipes().then(recipes => {
     createListItems(allUtensils, utensilsList);
 });
 
-// Fonction de recherche principale
 function searchAlgo(recipes) {
-    // Fonction pour effectuer la recherche
     function performSearch() {
-
         const searchTerm = searchBar.value.trim().toLowerCase();
-        if (searchTerm === 0) {
-            galleryContainer.innerHTML = '';
-            searchNoResults.style.display = 'none';
-            displayRecipes(recipes);
-        }
-        if (searchTerm <= 3) {
+        
+        if (searchTerm === "") {
+            filteredRecipes = recipes;
+        } else if (searchTerm.length <= 3) {
             return;
+        } else {
+            // Filtrer les recettes
+            filteredRecipes = recipes.filter(recipe => {
+                return (
+                    recipe.name.toLowerCase().includes(searchTerm) ||
+                    recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchTerm)) ||
+                    recipe.description.toLowerCase().includes(searchTerm) ||
+                    recipe.appliance.toLowerCase().includes(searchTerm) ||
+                    recipe.ustensils.some(ustensils => ustensils.toLowerCase().includes(searchTerm))
+                );
+            });
         }
-        // Filtrer les recettes qui correspondent au terme de recherche
-        filteredRecipes = recipes.filter(recipe => {
-            return (
-                recipe.name.toLowerCase().includes(searchTerm) ||
-                recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchTerm)) ||
-                recipe.description.toLowerCase().includes(searchTerm) ||
-                recipe.appliance.toLowerCase().includes(searchTerm) ||
-                recipe.ustensils.some(ustensils => ustensils.toLowerCase().includes(searchTerm))
-            );
-        });
-        // Effacer les recettes actuellement affichées
+
         galleryContainer.innerHTML = '';
 
         if (filteredRecipes.length === 0) {
-            // Aucun résultat trouvé, afficher le message avec le terme de recherche
+            // Aucun résultat trouvé
             searchElement.textContent = searchBar.value;
             searchNoResults.style.display = 'block';
         } else {
-            // Masquer le message s'il y a des résultats et Afficher les recettes filtrées
             searchNoResults.style.display = 'none';
             currentRecipes = filteredRecipes;
             updateRecipeCount(currentRecipes.length);
             updateListsRecipes(currentRecipes);
             displayRecipes(currentRecipes);
         }
-
     }
-    // Ajoutez un écouteur d'événement à la barre de recherche pour déclencher la recherche
+
+    // Ajoutez un gestionnaire d'événements à la barre de recherche pour déclencher la recherche
     searchBar.addEventListener('input', performSearch);
+
+    // Ajoutez un gestionnaire d'événements pour réinitialiser la liste des recettes lorsque le champ de recherche est vidé
+    searchBar.addEventListener('change', function() {
+        if (searchBar.value.trim() === "") {
+            filteredRecipes = recipes;
+            galleryContainer.innerHTML = '';
+            displayRecipes(filteredRecipes);
+        }
+    });
 }
 
 // Fonction qui permet de créer une liste deroulantes pour les ingredients, ustensilles et appareils
