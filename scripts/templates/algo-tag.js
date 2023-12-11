@@ -27,15 +27,19 @@ getRecipes().then(recipes => {
 
 // Fonction de recherche principale
 function searchAlgo(recipes) {
+    currentRecipes = filteredRecipes;
     // Fonction pour effectuer la recherche
     function performSearch() {
         const searchTerm = searchBar.value.trim().toLowerCase();
-        if (searchTerm === 0) {
+        console.log(searchTerm.length);
+        if (searchTerm.length === 0) {
             galleryContainer.innerHTML = '';
             searchNoResults.style.display = 'none';
+            updateRecipeCount(recipes.length);
+            updateListsRecipes(recipes);
             displayRecipes(recipes);
         }
-        if (searchTerm <= 3) {
+        if (searchTerm.length < 3) {
             return;
         }
         // Filtrer les recettes qui correspondent au terme de recherche
@@ -103,8 +107,8 @@ function filterRecipesByIngredient() {
     });
     // console.time
     galleryContainer.innerHTML = "";
-    if (selectedItems.size === 0) {
-        displayRecipes(currentRecipes);
+    if (filteredRecipes.length === 0) {
+        displayRecipes(filteredRecipes);
     }
     if (filteredRecipes.length > 0) {
         searchNoResults.style.display = "none";
