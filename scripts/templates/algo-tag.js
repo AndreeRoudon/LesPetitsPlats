@@ -34,16 +34,43 @@ function searchAlgo(recipes) {
         } else if (searchTerm.length <= 3) {
             return;
         } else {
-            // Filtrer les recettes
-            filteredRecipes = recipes.filter(recipe => {
-                return (
-                    recipe.name.toLowerCase().includes(searchTerm) ||
-                    recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchTerm)) ||
-                    recipe.description.toLowerCase().includes(searchTerm) ||
-                    recipe.appliance.toLowerCase().includes(searchTerm) ||
-                    recipe.ustensils.some(ustensils => ustensils.toLowerCase().includes(searchTerm))
-                );
-            });
+            filteredRecipes = [];
+            for (let i = 0; i < recipes.length; i++) {
+                const recipe = recipes[i];
+                const searchTermLowerCase = searchTerm.toLowerCase();
+                
+                if (
+                    recipe.name.toLowerCase().includes(searchTermLowerCase) ||
+                    recipe.description.toLowerCase().includes(searchTermLowerCase) ||
+                    recipe.appliance.toLowerCase().includes(searchTermLowerCase)
+                ) {
+                    filteredRecipes.push(recipe);
+                } else {
+                    let ingredientMatch = false;
+                    for (let j = 0; j < recipe.ingredients.length; j++) {
+                        const ingredient = recipe.ingredients[j].ingredient.toLowerCase();
+                        if (ingredient.includes(searchTermLowerCase)) {
+                            ingredientMatch = true;
+                            break;
+                        }
+                    }
+                    if (ingredientMatch) {
+                        filteredRecipes.push(recipe);
+                    } else {
+                        let ustensilsMatch = false;
+                        for (let k = 0; k < recipe.ustensils.length; k++) {
+                            const ustensil = recipe.ustensils[k].toLowerCase();
+                            if (ustensil.includes(searchTermLowerCase)) {
+                                ustensilsMatch = true;
+                                break;
+                            }
+                        }
+                        if (ustensilsMatch) {
+                            filteredRecipes.push(recipe);
+                        }
+                    }
+                }
+            }
         }
 
         galleryContainer.innerHTML = '';
